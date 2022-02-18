@@ -55,9 +55,10 @@ display_scatter <- function(mapping = NULL,
                             center = TRUE,
                             axes = TRUE,
                             edges = NULL,
-                            paused = TRUE) {
-  if (!rlang::is_null(mapping)) {
-    names(mapping) <- sub("color", "colour", names(mapping))
+                            pch = 20
+                            ) {
+  if ("color" %in% names(mapping)) {
+    names(mapping)[names(mapping) == "color"] <- "colour"
   }
 
   dots <- list(...)
@@ -87,6 +88,7 @@ display_scatter <- function(mapping = NULL,
 
     edges <- validate_edges(edges)
     alpha <- validate_alpha(alpha)
+    pch   <- validate_pch(pch)
 
     widget <- infer_widget("display_scatter", tour_dim)
 
@@ -99,8 +101,6 @@ display_scatter <- function(mapping = NULL,
         "edges" = edges,
         "axes" = axes[["has_axes"]],
         "alpha" = alpha,
-        "backgroundColour" = col2hex(background_colour),
-        "paused" = paused
       ),
       "widget" = widget
     )

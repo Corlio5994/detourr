@@ -3,6 +3,7 @@ varying float vSize;
 varying vec3 vColor;
 varying float vAlpha;
 varying float vAntialias;
+varying float vShape;
 
 void main(){
     

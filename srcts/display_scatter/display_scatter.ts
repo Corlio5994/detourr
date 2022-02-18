@@ -105,9 +105,15 @@ export abstract class DisplayScatter {
         this.setTooltipFromHover(event)
       );
     }
+<<<<<<< Updated upstream
 
     const pointsGeometry = new THREE.BufferGeometry();
     const pointSize = this.config.size / 10;
+=======
+    
+    let pointsGeometry = new THREE.BufferGeometry();
+    let pointSize = this.config.size / 10;
+>>>>>>> Stashed changes
 
     const shaderOpts = this.getShaderOpts(pointSize);
     const pointsMaterial = new THREE.ShaderMaterial(shaderOpts);
@@ -443,6 +449,91 @@ export abstract class DisplayScatter {
     return new THREE.BufferAttribute(bufferArray, 3);
   }
 
+<<<<<<< Updated upstream
+=======
+  private addControls() {
+    this.addButton(
+      "reset",
+      "Reset camera position",
+      resetIcon,
+      () => {
+        // reset everything, but keep current time / frame and
+        // selected colour
+        this.orbitControls.reset();
+        this.setDefaultPointColours();
+        this.setDefaultPointSelection();
+        this.setControlType("ORBIT");
+      },
+    );
+    this.addButton(
+      "pan",
+      "Switch to pan controls",
+      panIcon,
+      () => this.setControlType("PAN"),
+    );
+    this.addButton(
+      "orbit",
+      "Switch to orbit controls",
+      orbitIcon,
+      () => this.setControlType("ORBIT"),
+    );
+    this.addButton(
+      "select",
+      "Switch to selection controls",
+      selectIcon,
+      () => this.setControlType("SELECT"),
+    );
+    this.addButton(
+      "brush",
+      "Colour selected points",
+      brushIcon,
+      () => this.setSelectedPointColour(),
+    );
+    this.addColourSelector();
+    
+    //TO DO: START ADDING SHAPE WIDGET HERE
+
+    // set orbit as default
+    this.controlType = "ORBIT";
+    let currentButton: HTMLButtonElement = this.container.querySelector(
+      `.orbitButton`,
+    );
+    currentButton.className = "orbitButton selected";
+  }
+
+  private addButton(
+    name: string,
+    hoverText: string,
+    icon: string,
+    buttonCallback: Function,
+  ) {
+    let button = document.createElement("button");
+    button.innerHTML = icon;
+    button.title = hoverText;
+    button.className = `${name}Button`;
+    button.onclick = () => buttonCallback();
+    this.container.appendChild(button);
+  }
+
+  private addColourSelector() {
+    // add colour picker
+    let colourSelector = document.createElement("input");
+    colourSelector.setAttribute("type", "color");
+    colourSelector.className = "colourSelector";
+    colourSelector.setAttribute("value", "#619CFF");
+    colourSelector.setAttribute(
+      "title",
+      "Select colour to apply using selection box",
+    );
+    colourSelector.addEventListener(
+      "change",
+      () => this.setSelectedPointColour(),
+    );
+    this.container.appendChild(colourSelector);
+    this.colourSelector = colourSelector;
+  }
+
+>>>>>>> Stashed changes
   private addAxisLabels() {
     const dpr = this.renderer.getPixelRatio();
     if (this.config.axisLabels == []) {
@@ -749,6 +840,8 @@ export abstract class DisplayScatter {
   private setDefaultPointColours() {
     this.pointColours = this.coloursToBufferAttribute(this.mapping.colour);
   }
+
+  //TODO: Pretty sure there should be a setpch function here
 
   private setDefaultPointSelection() {
     this.selectedPointIndices = Array(this.dataset.length)

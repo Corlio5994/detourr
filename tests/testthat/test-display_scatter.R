@@ -129,6 +129,46 @@ test_that("colours work", {
   expect_equal(t$x$config$backgroundColour, "#D3D3D3")
 })
 
+test_that("shapes work", {
+  n <- nrow(tourr::flea)
+
+  # default, black
+  t <- animate_tour(
+    tourr::flea,
+    display = display_scatter(),
+    render_opts = list(max_bases = 1)
+  )
+  expect_equal(t$x$mapping$colour, rep("#000000", n))
+  expect_equal(t$x$mapping$label, character(0))
+
+  # viridis, 3 colours
+  pal <- viridisLite::viridis(3)[as.factor(tourr::flea$species)]
+  pal <- substr(pal, 1, 7) # no alpha channel
+  t <- animate_tour(
+    tourr::flea,
+    display = display_scatter(tour_aes(colour = species)),
+    render_opts = list(max_bases = 1)
+  )
+  expect_equal(t$x$mapping$colour, pal)
+
+  # AsIs column
+  flea <- tourr::flea
+  flea$pal_col <- pal
+  t <- animate_tour(
+    flea,
+    display = display_scatter(tour_aes(colour = I(pal_col))),
+    render_opts = list(max_bases = 1)
+  )
+  expect_equal(t$x$mapping$colour, pal)
+
+  # AsIs literal value
+  t <- animate_tour(
+    flea,
+    display = display_scatter(tour_aes(colour = I(c("red", "green")))),
+    render_opts = list(max_bases = 1)
+  )
+  expect_equal(t$x$mapping$colour, rep(c("red", "green"), length.out = n))
+})
 
 test_that("labels work", {
   n <- nrow(tourr::flea)
